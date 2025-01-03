@@ -1,0 +1,53 @@
+Server Start Guide
+Anleitung: Lokalen PHP-Server starten und schließen
+Voraussetzungen:
+
+    PHP ist auf dem neuen PC installiert.
+
+    Der Projektordner enthält alle notwendigen Dateien (z.B. index.php, style.css, script.js).
+
+1. Server starten
+
+    Terminal oder Eingabeaufforderung öffnen
+
+        Windows: Drücke Win + R, gib cmd ein und drücke Enter.
+
+        macOS/Linux: Öffne das Terminal.
+
+    Zum Projektordner navigieren
+    cd Pfad/zum/Projektordner
+
+    Beispiel:
+    cd Downloads/Projektordner
+
+    PHP-Server starten
+    php -S localhost:8000
+
+        Dies startet einen Server auf http://localhost:8000.
+
+    Webseite im Browser aufrufen
+
+        Öffne einen Browser und gib ein:
+        http://localhost:8000
+
+2. Server schließen
+
+    Gehe zum Terminal oder zur Eingabeaufforderung, in der der Server läuft.
+
+    Server stoppen:
+
+        Drücke Strg + C (Windows/Linux/macOS).
+
+3. Häufige Probleme
+
+    Port bereits belegt:
+
+        Falls der Port 8000 schon verwendet wird, probiere einen anderen Port:
+        php -S localhost:8080
+
+    PHP nicht erkannt:
+
+        Prüfe die PHP-Installation:
+        php -v
+
+        Installiere PHP, falls es fehlt.
