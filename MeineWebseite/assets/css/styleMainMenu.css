@@ -47,6 +47,7 @@
 
         .menu-list a:hover {
             background: #ffaa00;
+            color: #000000;
         }
 
         /* Pop-up Styling */
@@ -77,13 +78,14 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
-            color: #ffffff;
+            color: #000000;
             background-color: #f5b921;
             cursor: pointer;
             border-radius: 2px;
         }
         .close-btn:hover {
             background: #ffaa00;
+            color: #000000;
         }
         
         
@@ -98,7 +100,7 @@
         }
 
         button {
-            color: #ffffff;
+            color: #000000;
             background-color: #f5b921;
             cursor: pointer;
         }
