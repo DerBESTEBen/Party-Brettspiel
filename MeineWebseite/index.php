@@ -12,7 +12,6 @@
         <ul class="menu-list">
             <li><a href="#" id="startGame">Spielen</a></li>
             <li><a href="PHP/spielanleitung.php">Spielanleitung</a></li>
-            <li><a href="PHP/einstellungen.php">Einstellungen</a></li>
             <li><a href="PHP/beenden.php">Beenden</a></li>
         </ul>
     </div>

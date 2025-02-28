@@ -1,8 +1,26 @@
 <?php
-// Anzahl der Spieler aus GET-Parameter abrufen
-$playerCount = isset($_GET['players']) ? (int)$_GET['players'] : 2;
-$names = isset($_GET['names']) ? explode(",", $_GET['names']) : [];
+include_once 'spieler.php'; // Spieler-Klasse einbinden
+
+// Prüfen, ob Spieler-Daten übergeben wurden
+if (isset($_GET['names']) && isset($_GET['players'])) {
+    $names = explode(",", $_GET['names']); // Namen aus Query-String holen
+    $spielerAnzahl = intval($_GET['players']);
+
+    $spielerListe = [];
+
+    foreach ($names as $index => $name) {
+        $spielerListe[] = new Spieler(urldecode($name), $index); // Spiele-ID 1 als Beispiel
+    }
+
+    // Test-Ausgabe der Spieler
+    foreach ($spielerListe as $spieler) {
+        echo $spieler->getInfo() . "<br>";
+    }
+} else {
+    echo "Keine Spieler-Daten erhalten.";
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -12,7 +30,7 @@ $names = isset($_GET['names']) ? explode(",", $_GET['names']) : [];
     <link rel="stylesheet" href="..\assets\css\styleOberflaeche.css">
 </head>
 <body>
-    <h1>Spiel läuft mit <?= $playerCount ?> Spielern!</h1>
+    <!--<h1>Spiel läuft mit <?= $playerCount ?> Spielern!</h1>-->
     <!-- <div class="board-container">
         <div class="field start">START</div>
         <div class="field drink">Alle trinken</div>
@@ -58,6 +76,6 @@ $names = isset($_GET['names']) ? explode(",", $_GET['names']) : [];
         <div class="field rule">REGEL</div>
     </div> -->
     <a href="..\index.php" class="btn" id="zurück">Zurück zum Hauptmenü</a>
-    
+
 </body>
 </html>

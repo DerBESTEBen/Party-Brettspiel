@@ -32,13 +32,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Spielernamen-Felder generieren
     function showNameInputs(count) {
-        nameInputs.innerHTML = ""; // Vorherige Eingaben löschen
+
+        nameInputs.innerHTML= '';
         for (let i = 1; i <= count; i++) {
             let input = document.createElement("input");
             input.type = "text";
             input.name = `player${i}`;
             input.placeholder = `Name Spieler ${i}`;
-            input.required = true;
+        
+            if (input.value.trim() === "") {
+                input.value = `Spieler ${i}`;
+            }
+            // Beim Klicken: Standardtext löschen
+            input.addEventListener("focus", function () {
+                if (input.value === `Spieler ${i}`) {
+                    input.value = "";
+                }
+            });
+
+            // Falls nichts eingegeben wurde: Standardtext zurücksetzen
+            input.addEventListener("blur", function () {
+                if (input.value.trim() === "") {
+                    input.value = `Spieler ${i}`;
+                }
+            });
+            
             nameInputs.appendChild(input);
         }
     }
