@@ -1,26 +1,33 @@
 document.addEventListener("DOMContentLoaded", function () {
     const startGameBtn = document.getElementById("startGame");
-    const popupPlayers = document.getElementById("popup-players");
-    const popupNames = document.getElementById("popup-names");
-    const confirmPlayersBtn = document.getElementById("confirmPlayers");
-    const nameForm = document.getElementById("nameForm");
+    const popup = document.getElementById("popup");
+    const closeBtn = document.querySelector(".close-btn");
+    const nextStepBtn = document.getElementById("nextStep");
+    const playerCountSelect = document.getElementById("playerCount");
+    const popupTitle = document.getElementById("popup-title");
+    const stepPlayers = document.getElementById("step-players");
+    const stepNames = document.getElementById("step-names");
     const nameInputs = document.getElementById("nameInputs");
-    const closeBtns = document.querySelectorAll(".close-btn");
+    const nameForm = document.getElementById("step-names");
 
-    let playerCount = 1;
+    let playerCount = 2;
 
-    // "Spielen"-Button öffnet das erste Pop-up (Spieleranzahl wählen)
+    // "Spielen"-Button öffnet das Pop-up (Erster Schritt: Spieleranzahl)
     startGameBtn.addEventListener("click", function (event) {
         event.preventDefault();
-        popupPlayers.style.display = "flex";
+        popup.style.display = "flex";
+        stepPlayers.style.display = "block";
+        stepNames.style.display = "none";
+        popupTitle.textContent = "Spieleranzahl wählen";
     });
 
-    // Spieleranzahl bestätigen -> öffnet Namenseingabe
-    confirmPlayersBtn.addEventListener("click", function () {
-        playerCount = document.getElementById("playerCount").value;
-        popupPlayers.style.display = "none";
+    // Weiter zur Namenseingabe
+    nextStepBtn.addEventListener("click", function () {
+        playerCount = parseInt(playerCountSelect.value);
         showNameInputs(playerCount);
-        popupNames.style.display = "flex";
+        stepPlayers.style.display = "none";
+        stepNames.style.display = "block";
+        popupTitle.textContent = "Spielernamen eingeben";
     });
 
     // Spielernamen-Felder generieren
@@ -50,17 +57,13 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = queryString;
     });
 
-    // Schließen der Pop-ups
-    closeBtns.forEach(btn => {
-        btn.addEventListener("click", function () {
-            popupPlayers.style.display = "none";
-            popupNames.style.display = "none";
-        });
+    // Schließen des Pop-ups
+    closeBtn.addEventListener("click", function () {
+        popup.style.display = "none";
     });
 
     // Schließen des Pop-ups beim Klick außerhalb
     window.addEventListener("click", function (event) {
-        if (event.target === popupPlayers) popupPlayers.style.display = "none";
-        if (event.target === popupNames) popupNames.style.display = "none";
+        if (event.target === popup) popup.style.display = "none";
     });
 });

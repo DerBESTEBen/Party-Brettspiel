@@ -3,14 +3,13 @@
 $playerCount = isset($_GET['players']) ? (int)$_GET['players'] : 2;
 $names = isset($_GET['names']) ? explode(",", $_GET['names']) : [];
 ?>
-?>
 <!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spielbrett</title>
-    <link rel="stylesheet" href="..\assets\css\style.css">
+    <link rel="stylesheet" href="..\assets\css\styleOberflaeche.css">
 </head>
 <body>
     <h1>Spiel läuft mit <?= $playerCount ?> Spielern!</h1>
@@ -58,6 +57,7 @@ $names = isset($_GET['names']) ? explode(",", $_GET['names']) : [];
         <div class="field rule">REGEL</div>
         <div class="field rule">REGEL</div>
     </div> -->
-    <a href="..\index.php" class="btn">Zurück zum Hauptmenü</a>
+    <a href="..\index.php" class="btn" id="zurück">Zurück zum Hauptmenü</a>
+    
 </body>
 </html>

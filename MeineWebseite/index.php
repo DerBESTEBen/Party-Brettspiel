@@ -17,34 +17,31 @@
         </ul>
     </div>
 
-    <!-- Pop-up 1: Spieleranzahl wählen -->
-    <div id="popup-players" class="popup">
+    <!-- Ein einziges Pop-up für beide Schritte -->
+    <div id="popup" class="popup">
         <div class="popup-content">
             <span class="close-btn">&times;</span>
-            <h2>Spieleranzahl wählen</h2>
-            <select id="playerCount">
-                <?php for ($i = 2; $i <= 10; $i++): ?>
-                    <option value="<?= $i ?>"><?= $i ?> Spieler</option>
-                <?php endfor; ?>
-            </select>
-            <button id="confirmPlayers">Weiter</button>
-        </div>
-    </div>
+            <h2 id="popup-title">Spieleranzahl wählen</h2>
 
-    <!-- Pop-up 2: Spielernamen eingeben -->
-    <div id="popup-names" class="popup">
-        <div class="popup-content">
-            <span class="close-btn">&times;</span>
-            <h2>Spielernamen eingeben</h2>
-            <form id="nameForm">
+            <!-- Schritt 1: Auswahl der Spieleranzahl -->
+            <div id="step-players">
+                <select id="playerCount">
+                    <?php for ($i = 2; $i <= 10; $i++): ?>
+                        <option value="<?= $i ?>"><?= $i ?> Spieler</option>
+                    <?php endfor; ?>
+                </select>
+                <button id="nextStep">Weiter</button>
+            </div>
+
+            <!-- Schritt 2: Spielernamen eingeben (wird später befüllt) -->
+            <form id="step-names" style="display: none;">
                 <div id="nameInputs"></div>
                 <button type="submit">Spiel starten</button>
             </form>
         </div>
     </div>
 
-
-<script src="assets/js/Spieleinstellung.js"></script>
+    <script src="assets/js/Spieleinstellung.js"></script>
 
 </body>
 </html>
