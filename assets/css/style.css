@@ -2,12 +2,14 @@
 
         body {
             font-family: Arial, sans-serif;
-            background-color: #ddba5b;
+            background-color: #f5b921;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
         }
         
         .board-container {
