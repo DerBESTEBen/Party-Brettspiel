@@ -9,7 +9,11 @@
   "jest": {
     "testEnvironment": "jsdom",
     "testMatch": [
-      "**/Test/**/*.test.js"
+      "**/Test/**/*.test.js",
+      "PHP/**/*.php",
+      "assets/js/*.js",
+      "assets/css/*.css"
+
     ]
   },
   "devDependencies": {
