@@ -1,7 +1,3 @@
-<<<<<<< HEAD:PHP/spieloberflaeche.php
-<<<<<<<< HEAD:PHP/spieloberflaeche.php
-=======
->>>>>>> bceaec6325b52213e3faa19fdc9ecf64e8c97c9a:MeineWebseite/PHP/spieloberflaeche.php
 <?php
 include_once 'spieler.php'; // Spieler-Klasse einbinden
 
@@ -83,8 +79,3 @@ if (isset($_GET['names']) && isset($_GET['players'])) {
 
 </body>
 </html>
-<<<<<<< HEAD:PHP/spieloberflaeche.php
-========
->>>>>>>> bceaec6325b52213e3faa19fdc9ecf64e8c97c9a:MeineWebseite/PHP/spiel.php
-=======
->>>>>>> bceaec6325b52213e3faa19fdc9ecf64e8c97c9a:MeineWebseite/PHP/spieloberflaeche.php
