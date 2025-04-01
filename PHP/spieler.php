@@ -10,14 +10,14 @@ class Spieler {
     // Konstruktor zum Erstellen eines Spielers
     public function __construct(string $name, int $spielerId) {
         $this->name = $name;
-        $this->spielerPosition = 0;   // Startposition
+        $this->spielerPosition = 0;
         $this->status = true;  // Aktiv
         $this->spielerId = $spielerId;
         $this->istFertig = false;
     }
 
-    public function position_aktualisieren(int $spielerPosition, int $felder): void {
-        $this->position = $spielerPosition + $felder;
+    public function position_aktualisieren(int $felder): void {
+        $this->spielerPosition += $felder;
     }
     
     //(Debugging)

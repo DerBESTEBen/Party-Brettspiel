@@ -8,12 +8,6 @@ class Spiel {
     private int $wurf;
     private bool $spielLaeuft;
 
-    /**
-     * Konstruktor: Erzeugt ein Spiel mit einem Array von Spielernamen.
-     * Jeder Spieler erhält eine eindeutige Spieler-ID (entsprechend dem Array-Index).
-     *
-     * @param array $spielerNamen Array mit Spielernamen
-     */
     public function __construct(array $spielerNamen) {
         $this->rundenCounter = 0;
         $this->wurf = 0;
@@ -25,36 +19,33 @@ class Spiel {
         }
     }
 
-    /**
-     * Initialisiert eine neue Runde, indem der Rundenzähler hochgezählt wird.
-     */
+
     public function runden_initialisieren(): void {
-        $this->rundenCounter++;
+        $this->rundenCounter++; //Counter zählt hoch für jede Runde
         $this->wurf = 0;
         echo "<h2>Runde {$this->rundenCounter}</h2>";
     }
 
-    /**
-     * Führt den Zug für einen bestimmten Spieler aus.
-     * Dabei wird geprüft, ob der Spieler ziehen darf (Status aus Spieler.php).
-     *
-     * @param int $spielerId Index des Spielers im Array (0-basiert)
-     */
     public function zug_starten(int $spielerId): void {
         if (!$this->spielLaeuft) {
             echo "<p>Das Spiel ist bereits beendet.</p>";
             return;
         }
+
+        // Prüfe anhand der Eigenschaft 'status', ob der Spieler ziehen darf
         if (!$this->spieler_status_pruefen($spielerId)) {
             echo "<p><strong>{$this->spieler[$spielerId]->name}</strong> darf nicht ziehen.</p>";
-            return;
-        }
+            // Jetzt wieder aktiv für nächste Runde
+        $this->spieler[$spielerId]->status = true;
+        return;
+        }   
+
         // Würfeln
         $this->wurf = $this->wuerfeln();
         echo "<p><strong>{$this->spieler[$spielerId]->name}</strong> würfelt: {$this->wurf}</p>";
 
         // Spieler bewegen – Aufruf der Methode position_aktualisieren aus Spieler.php
-        $this->spieler[$spielerId]->position_aktualisieren($this->spieler[$spielerId]->spielerPosition, $this->wurf);
+        $this->spieler[$spielerId]->position_aktualisieren($this->wurf);
         echo "<p>Neue Position von <strong>{$this->spieler[$spielerId]->name}</strong>: {$this->spieler[$spielerId]->spielerPosition}</p>";
 
         // Feld auswerten (Platzhalter für erweiterte Logik)
@@ -68,10 +59,7 @@ class Spiel {
     }
 
     /**
-     * Prüft, ob der Spieler ziehen darf, basierend auf seinem Status.
-     *
-     * @param int $spielerId
-     * @return bool true, wenn der Spieler aktiv ist
+     * true, wenn der Spieler aktiv ist (ziehen darf)
      */
     public function spieler_status_pruefen(int $spielerId): bool {
         return $this->spieler[$spielerId]->status;
@@ -79,8 +67,6 @@ class Spiel {
 
     /**
      * Simuliert einen Würfelwurf (Zahl zwischen 1 und 6).
-     *
-     * @return int Gewürfelte Zahl
      */
     public function wuerfeln(): int {
         return rand(1, 6);
@@ -89,12 +75,14 @@ class Spiel {
     /**
      * Wertet das Feld aus, auf dem der Spieler gelandet ist.
      * (Erweiterbar um spezielle Logik.)
-     *
-     * @param int $spielerId
-     * @param int $spielerposition
      */
     public function feld_auswerten(int $spielerId, int $spielerposition): void {
         echo "<p>Feld {$spielerposition} wird für Spieler <strong>{$this->spieler[$spielerId]->name}</strong> ausgewertet.</p>";
+        // Beispiel: Spieler muss auf Feld 7 eine Runde aussetzen
+        if ($spielerposition === 7 || $spielerposition === 10 || $spielerposition === 3 || $spielerposition === 5 || $spielerposition === 9) {
+            $this->spieler[$spielerId]->status = false;
+            echo "<p><strong>{$this->spieler[$spielerId]->name}</strong> muss eine Runde aussetzen!</p>";
+        }
     }
 
     /**
