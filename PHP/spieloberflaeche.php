@@ -1,5 +1,6 @@
 <?php
 include_once 'spieler.php'; // Spieler-Klasse einbinden
+include_once 'spiel.php';   // Spiel-Klasse inkl. wuerfeln() einbinden
 
 // Prüfen, ob Spieler-Daten übergeben wurden
 if (isset($_GET['names']) && isset($_GET['players'])) {
