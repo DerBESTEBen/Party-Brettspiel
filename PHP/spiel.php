@@ -1,8 +1,5 @@
 <?php
-// spiel.php
-
-// Spieler-Klasse einbinden (diese Datei enthält auch die Methode position_aktualisieren() – bitte ggf. den Fehler in der Methode beheben)
-require_once 'spieler.php';
+include_once 'spieler.php'; // Spieler-Klasse einbinden
 
 class Spiel {
     public int $rundenCounter;
@@ -12,7 +9,7 @@ class Spiel {
     private bool $spielLaeuft;
 
     /**
-     * Erstellt das Spiel mit einem Array von Spielernamen.
+     * Konstruktor: Erzeugt ein Spiel mit einem Array von Spielernamen.
      * Jeder Spieler erhält eine eindeutige Spieler-ID (entsprechend dem Array-Index).
      *
      * @param array $spielerNamen Array mit Spielernamen
@@ -48,13 +45,10 @@ class Spiel {
             echo "<p>Das Spiel ist bereits beendet.</p>";
             return;
         }
-
-        // Prüfe anhand der Eigenschaft 'status' in Spieler.php, ob der Spieler ziehen darf
         if (!$this->spieler_status_pruefen($spielerId)) {
             echo "<p><strong>{$this->spieler[$spielerId]->name}</strong> darf nicht ziehen.</p>";
             return;
         }
-
         // Würfeln
         $this->wurf = $this->wuerfeln();
         echo "<p><strong>{$this->spieler[$spielerId]->name}</strong> würfelt: {$this->wurf}</p>";
@@ -63,10 +57,10 @@ class Spiel {
         $this->spieler[$spielerId]->position_aktualisieren($this->spieler[$spielerId]->spielerPosition, $this->wurf);
         echo "<p>Neue Position von <strong>{$this->spieler[$spielerId]->name}</strong>: {$this->spieler[$spielerId]->spielerPosition}</p>";
 
-        // Platzhalter für Feld-Auswertung
+        // Feld auswerten (Platzhalter für erweiterte Logik)
         $this->feld_auswerten($spielerId, $this->spieler[$spielerId]->spielerPosition);
 
-        // Beispielhafte Siegbedingung: Erreicht ein Spieler Position 20 oder mehr, gewinnt er
+        // Siegbedingung: Erreicht ein Spieler Position 20 oder mehr, gewinnt er
         if ($this->spieler[$spielerId]->spielerPosition >= 20) {
             echo "<p>Spieler <strong>{$this->spieler[$spielerId]->name}</strong> hat gewonnen!</p>";
             $this->spiel_beenden();
@@ -77,7 +71,7 @@ class Spiel {
      * Prüft, ob der Spieler ziehen darf, basierend auf seinem Status.
      *
      * @param int $spielerId
-     * @return bool true, wenn der Spieler aktiv ist (ziehen darf)
+     * @return bool true, wenn der Spieler aktiv ist
      */
     public function spieler_status_pruefen(int $spielerId): bool {
         return $this->spieler[$spielerId]->status;
@@ -121,94 +115,4 @@ class Spiel {
         }
     }
 }
-
-
-// --- Interaktive Spieloberfläche ---
-
-// Wir nutzen GET-Parameter, um den Spielstatus zwischen den Zügen zu übermitteln.
-// Erwartete Parameter: players, names, round, current, positions
-$playerCount = isset($_GET['players']) ? intval($_GET['players']) : 2;
-$names = isset($_GET['names']) ? explode(',', $_GET['names']) : [];
-if(empty($names)) {
-    // Standardnamen, falls keine übergeben wurden
-    $names = [];
-    for ($i = 0; $i < $playerCount; $i++) {
-        $names[] = "Spieler " . ($i + 1);
-    }
-}
-$round = isset($_GET['round']) ? intval($_GET['round']) : 1;
-$currentPlayer = isset($_GET['current']) ? intval($_GET['current']) : 0;
-$positionsParam = isset($_GET['positions']) ? $_GET['positions'] : '';
-if ($positionsParam !== '') {
-    $positions = explode(',', $positionsParam);
-} else {
-    // Initialisiere Positionen aller Spieler mit 0
-    $positions = array_fill(0, $playerCount, 0);
-}
-
-// Erstelle ein Spiel-Objekt und setze den Zustand der Spieler entsprechend.
-$spiel = new Spiel($names);
-foreach ($spiel->spieler as $i => $spielerObj) {
-    $spiel->spieler[$i]->spielerPosition = isset($positions[$i]) ? intval($positions[$i]) : 0;
-}
-
-// Wird der "Würfeln"-Knopf gedrückt, soll der aktuelle Spieler seinen Zug machen.
-$actionOutput = '';
-if (isset($_GET['roll'])) {
-    // Falls gerade ein Zug erfolgt, rufen wir die Zug-Methode des aktuellen Spielers auf.
-    ob_start();
-    $spiel->zug_starten($currentPlayer);
-    $actionOutput = ob_get_clean();
-
-    // Aktualisiere den Zustand: 
-    // Nach dem Zug des letzten Spielers wird der Rundenzähler (außerhalb der Zug-Methode) hochgesetzt.
-    if ($currentPlayer >= $playerCount - 1) {
-        $round++;
-        $currentPlayer = 0;
-    } else {
-        $currentPlayer++;
-    }
-}
-
-// Aktualisiere die Positionen für die Übertragung im Formular.
-$newPositions = [];
-foreach ($spiel->spieler as $spielerObj) {
-    $newPositions[] = $spielerObj->spielerPosition;
-}
-$positionsString = implode(',', $newPositions);
 ?>
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <title>Spiel - Rundenlogik</title>
-</head>
-<body>
-    <h1>Spiel: Rundenlogik</h1>
-    <p>Aktuelle Runde: <?= $round ?></p>
-    <p>Aktueller Zug: <?= $names[$currentPlayer] ?></p>
-    
-    <!-- Anzeige des letzten Zuges (falls erfolgt) -->
-    <?php if (isset($_GET['roll'])): ?>
-        <?= $actionOutput ?>
-    <?php endif; ?>
-
-    <h2>Spielstand:</h2>
-    <ul>
-        <?php foreach ($spiel->spieler as $spieler): ?>
-            <li><?= $spieler->name ?> – Position: <?= $spieler->spielerPosition ?></li>
-        <?php endforeach; ?>
-    </ul>
-
-    <!-- Formular für den nächsten Zug -->
-    <form method="get" action="">
-        <!-- Übergebe alle notwendigen Spielzustandswerte als versteckte Felder -->
-        <input type="hidden" name="players" value="<?= htmlspecialchars($playerCount) ?>">
-        <input type="hidden" name="names" value="<?= htmlspecialchars(implode(',', $names)) ?>">
-        <input type="hidden" name="round" value="<?= $round ?>">
-        <input type="hidden" name="current" value="<?= $currentPlayer ?>">
-        <input type="hidden" name="positions" value="<?= htmlspecialchars($positionsString) ?>">
-        <button type="submit" name="roll" value="1">Würfeln (<?= $names[$currentPlayer] ?>)</button>
-    </form>
-</body>
-</html>
