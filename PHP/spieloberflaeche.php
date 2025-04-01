@@ -59,7 +59,7 @@ $positionsString = implode(',', $newPositions);
 // -----------------------
 // Spielfeld-Definition
 // -----------------------
-$boardLength = 30; // Gesamtzahl der Felder
+$boardLength = 21; // Gesamtzahl der Felder
 $columns = 5;      // Anzahl der Spalten
 // Farben für die Spielsteine (nach Index des Spielers)
 $colors = ["red", "blue", "green", "orange", "purple", "cyan", "magenta"];
@@ -149,7 +149,8 @@ $colors = ["red", "blue", "green", "orange", "purple", "cyan", "magenta"];
         <input type="hidden" name="round" value="<?= $round ?>">
         <input type="hidden" name="current" value="<?= $currentPlayer ?>">
         <input type="hidden" name="positions" value="<?= htmlspecialchars($positionsString) ?>">
-        <button type="submit" name="roll" value="1">Würfeln (<?= $names[$currentPlayer] ?>)</button>
+
+        <button type="submit" class="btn" name="roll" value="1">Würfeln (<?= $names[$currentPlayer] ?>)</button>
     </form>
 </body>
 </html>
