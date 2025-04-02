@@ -20,35 +20,42 @@ if ($positionenParameter !== '') {
 } else {
     $positionen = array_fill(0, $anzahlSpieler, 0);
 }
+// -----------------
+// Finish-Orders übernehmen (0 = nicht fertig)
+$finishParameter = isset($_GET['finish']) ? $_GET['finish'] : '';
+if ($finishParameter !== '') {
+    $finishOrders = explode(',', $finishParameter);
+} else {
+    $finishOrders = array_fill(0, $anzahlSpieler, 0);
+}
 
 // -----------------------
-// Größe der Spielfelder festlegen
-// Basiswert 50px, plus 10px pro Spieler
-$zellenGroesse = 50 + ($anzahlSpieler * 10);
+// Feste Zellengröße (120px, unabhängig von der Spieleranzahl)
+$zellenGroesse = 120;
 
 // -----------------------
 // Spielfeld-Definition
-$spielfeldLaenge = 30; // Gesamtzahl der Felder
+$spielfeldLaenge = 30; // Gesamtzahl der Felder (Ziel ist Feld 29)
 $spalten = 5;          // Anzahl der Spalten
-// Farbliste für die Spielsteine (nach Index des Spielers)
-$farben = ["red", "blue", "green", "orange", "purple", "cyan", "magenta"];
+// Erweiterte Farbliste für die Spielsteine
+$farben = [
+    "red", "blue", "green", "orange", "purple", "cyan", "magenta",
+    "yellow", "pink", "brown", "lime", "turquoise", "violet", "indigo",
+    "gold", "silver", "coral", "teal", "navy", "maroon"
+];
 
 // -----------------------
 // Spiel-Objekt erstellen und Zustand setzen
 $spiel = new Spiel($spielernamen);
 foreach ($spiel->spieler as $i => $spielerObj) {
     $spiel->spieler[$i]->spielerPosition = isset($positionen[$i]) ? intval($positionen[$i]) : 0;
+    // Setze fertig, falls FinishOrder != 0
+    $spiel->spieler[$i]->istFertig = ($finishOrders[$i] != 0);
 }
 
 // -----------------------
-// Aktionsverarbeitung: Würfelknopf wurde gedrückt
-$aktionsAusgabe = '';
-if (isset($_GET['roll'])) {
-    ob_start();
-    $spiel->zug_starten($aktuellerSpieler);
-    $aktionsAusgabe = ob_get_clean();
-
-    // Nach dem Zug des letzten Spielers wird die Runde erhöht
+// Falls der aktuelle Spieler bereits fertig ist, überspringe ihn
+while ($spiel->spieler[$aktuellerSpieler]->istFertig) {
     if ($aktuellerSpieler >= $anzahlSpieler - 1) {
         $runde++;
         $aktuellerSpieler = 0;
@@ -58,82 +65,143 @@ if (isset($_GET['roll'])) {
 }
 
 // -----------------------
+// Aktionsverarbeitung: Würfelknopf wurde gedrückt
+$aktionsAusgabe = '';
+if (isset($_GET['roll'])) {
+    ob_start();
+    $spiel->zug_starten($aktuellerSpieler);
+    $aktionsAusgabe = ob_get_clean();
+    
+    // Wenn der Spieler das Ziel erreicht (Feld 29), markiere ihn als fertig, falls noch nicht geschehen
+    if ($spiel->spieler[$aktuellerSpieler]->spielerPosition >= $spielfeldLaenge - 1 && $finishOrders[$aktuellerSpieler] == 0) {
+        // Ermittlung der nächsten Finish-Nummer (kleinster > 0, also max + 1)
+        $finishCounter = max($finishOrders) + 1;
+        $finishOrders[$aktuellerSpieler] = $finishCounter;
+        $spiel->spieler[$aktuellerSpieler]->istFertig = true;
+        // Position fixieren
+        $spiel->spieler[$aktuellerSpieler]->spielerPosition = $spielfeldLaenge - 1;
+    }
+    
+    // Nach dem Zug: Überspringe alle fertiggestellten Spieler
+    $startSpieler = $aktuellerSpieler;
+    do {
+        if ($aktuellerSpieler >= $anzahlSpieler - 1) {
+            $runde++;
+            $aktuellerSpieler = 0;
+        } else {
+            $aktuellerSpieler++;
+        }
+        if ($aktuellerSpieler == $startSpieler) break;
+    } while ($spiel->spieler[$aktuellerSpieler]->istFertig);
+}
+
+// -----------------------
 // Aktualisiere die Positionen für das Formular
 $neuePositionen = [];
 foreach ($spiel->spieler as $spielerObj) {
     $neuePositionen[] = $spielerObj->spielerPosition;
 }
-
 $positionenString = implode(',', $neuePositionen);
-
-// -----------------------
-// Spielfeld-Definition
-// -----------------------
-$boardLength = 21; // Gesamtzahl der Felder
-$columns = 5;      // Anzahl der Spalten
-// Farben für die Spielsteine (nach Index des Spielers)
-$colors = ["red", "blue", "green", "orange", "purple", "cyan", "magenta"];
-
+$finishString = implode(',', $finishOrders);
 ?>
 <!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Spielbrett</title>
+    <title></title>
     <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        :root {
+            --cell-size: <?= $zellenGroesse ?>px;
+            --columns: <?= $spalten ?>;
+        }
+    </style>
 </head>
 <body>
     <a href="../index.php" class="btn" id="zurück">Zurück zum Hauptmenü</a>
     
-    <h1>Spielbrett</h1>
+    <h1></h1>
     <p>Aktuelle Runde: <?= $runde ?></p>
     <p>Aktueller Zug: <?= $spielernamen[$aktuellerSpieler] ?></p>
     
-    <!-- Ausgabe des letzten Zuges -->
-    <?php if (isset($_GET['roll'])): ?>
+    <?php /* if (isset($_GET['roll'])): ?>
         <div class="zug-info">
             <?= $aktionsAusgabe ?>
         </div>
-    <?php endif; ?>
+    <?php endif; */ ?>
 
-    <!-- Anzeige des Spielfelds als Grid -->
-    <div class="board-container" style="
-         --cell-size: <?= $zellenGroesse ?>px;
-         --columns: <?= $spalten ?>;
-         width: calc(var(--cell-size) * var(--columns) + (var(--columns) - 1) * 5px);
-         ">
+    <div class="board-container">
         <?php
         for ($feld = 0; $feld < $spielfeldLaenge; $feld++) {
             echo '<div class="cell">';
             echo '<span class="cell-number">' . $feld . '</span>';
+            $tokens = [];
             foreach ($spiel->spieler as $index => $spieler) {
                 if ($spieler->spielerPosition == $feld) {
-                    $farbe = $farben[$index % count($farben)];
-                    echo '<div class="game-piece" style="background-color:' . $farbe . ';" title="' . $spieler->name . '"></div>';
+                    $tokens[] = ['index' => $index, 'name' => $spieler->name, 'fertig' => $spieler->istFertig];
                 }
+            }
+            if (!empty($tokens)) {
+                echo '<div class="game-piece-container">';
+                foreach ($tokens as $token) {
+                    $farbe = $farben[$token['index'] % count($farben)];
+                    echo '<div class="game-piece" style="background-color:' . $farbe . ';" title="' . $token['name'] . '"></div>';
+                }
+                echo '</div>';
             }
             echo '</div>';
         }
         ?>
     </div>
 
-    <!-- Anzeige des Spielstands -->
-    <h2>Spielstand:</h2>
-    <ul>
-        <?php foreach ($spiel->spieler as $spieler): ?>
-            <li><?= $spieler->name ?> – Position: <?= $spieler->spielerPosition ?></li>
-        <?php endforeach; ?>
-    </ul>
+    <!-- Rangliste -->
+    <?php
+    // Kopie des Spieler-Arrays, sortiert: Fertiggestellte Spieler nach FinishOrder (kleinste zuerst),
+    // und aktive Spieler nach aktueller Position (absteigend).
+    $sortierteSpieler = $spiel->spieler;
+    usort($sortierteSpieler, function($a, $b) use ($finishOrders) {
+        $finishA = $finishOrders[$a->spielerId];
+        $finishB = $finishOrders[$b->spielerId];
+        if ($finishA != 0 && $finishB != 0) {
+            return $finishA - $finishB;
+        } elseif ($finishA != 0) {
+            return -1;
+        } elseif ($finishB != 0) {
+            return 1;
+        } else {
+            return $b->spielerPosition - $a->spielerPosition;
+        }
+    });
+    ?>
+    <div class="ranking-list">
+        <h2>Rangliste</h2>
+        <?php
+        $rank = 1;
+        foreach ($sortierteSpieler as $spieler) {
+            $farbe = $farben[$spieler->spielerId % count($farben)];
+            echo '<div class="ranking-entry">';
+            echo '<div class="ranking-color" style="background-color:' . $farbe . ';"></div>';
+            echo '<span>' . $rank . '. ' . $spieler->name . ' – ';
+            if ($finishOrders[$spieler->spielerId] != 0) {
+                echo "Ziel (Platz " . $finishOrders[$spieler->spielerId] . ")";
+            } else {
+                echo $spieler->spielerPosition;
+            }
+            echo '</span>';
+            echo '</div>';
+            $rank++;
+        }
+        ?>
+    </div>
 
-    <!-- Formular für den nächsten Zug (nur EIN Würfelknopf) -->
     <form method="get" action="">
-
         <input type="hidden" name="players" value="<?= htmlspecialchars($anzahlSpieler) ?>">
         <input type="hidden" name="names" value="<?= htmlspecialchars(implode(',', $spielernamen)) ?>">
         <input type="hidden" name="round" value="<?= $runde ?>">
         <input type="hidden" name="current" value="<?= $aktuellerSpieler ?>">
         <input type="hidden" name="positions" value="<?= htmlspecialchars($positionenString) ?>">
-        <button type="submit" name="roll" value="1">Würfeln (<?= $spielernamen[$aktuellerSpieler] ?>)</button>
+        <input type="hidden" name="finish" value="<?= htmlspecialchars($finishString) ?>">
+        <button type="submit" name="roll" value="1">Würfeln</button>
     </form>
     
     <!-- Aufgabenfeld-Pop-up -->

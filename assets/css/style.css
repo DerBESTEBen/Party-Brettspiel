@@ -3,7 +3,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 20px;
     background-color: #2b2b2b;
-    color: #fff;
+    color: #f5b921;
 }
 
 /* Button-Stile */
@@ -11,17 +11,17 @@ a.btn, button {
     display: inline-block;
     padding: 10px 20px;
     background-color: #444;
-    color: #fff;
+    color: #f5b921;
     text-decoration: none;
     border: none;
     border-radius: 4px;
     cursor: pointer;
 }
 
-/* Board-Container als Grid; die Spaltenzahl und Zellengröße werden über CSS-Variablen gesetzt */
+/* Board-Container als Grid */
 .board-container {
     display: grid;
-    grid-template-columns: repeat(var(--columns), 1fr);
+    grid-template-columns: repeat(5, 120px);
     gap: 5px;
     margin: 20px 0;
 }
@@ -29,20 +29,31 @@ a.btn, button {
 /* Zellen im Spielfeld */
 .cell {
     position: relative;
-    width: var(--cell-size);
-    height: var(--cell-size);
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
+    width: 120px;
+    height: 120px;
+    border: 1px solid #f5b921;
+    background-color: #f5b921;
+    color: #000;
     box-sizing: border-box;
 }
 
-/* Anzeige der Feldnummer in der Zelle */
+/* Anzeige der Feldnummer */
 .cell-number {
     position: absolute;
     top: 2px;
     left: 2px;
     font-size: 10px;
     color: #666;
+}
+
+/* Container für Spielertokens innerhalb einer Zelle */
+.game-piece-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 /* Spielstein als farbiger Punkt */
@@ -57,7 +68,7 @@ a.btn, button {
 /* Zusätzliche Info-Box für den letzten Zug */
 .zug-info {
     padding: 10px;
-    background-color: #eef;
+    background-color: #f5b921;
     border: 1px solid #99f;
     margin-bottom: 20px;
     color: #000;
@@ -97,4 +108,67 @@ button.aufgabenBtn {
 
 button.aufgabenBtn:hover {
     background-color: #ffaa00;
+}
+/*Pop Ups der Felder*/
+.popup {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Popup-Inhalt */
+.popup-content {
+    position: relative;
+    background-color: #222222;
+    box-shadow: 0px 0px 10px gray;
+    padding: 30px 20px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 0 10px rgba(0,0,0,0.25);
+}
+
+button.aufgabenBtn {
+    color: #000000;
+    background-color: #f5b921;
+    cursor: pointer;
+}
+
+button.aufgabenBtn:hover {
+    background-color: #ffaa00;
+}
+
+/* Rangliste */
+.ranking-list {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #444;
+    padding: 10px;
+    border-radius: 5px;
+    width: 250px;
+}
+.ranking-list h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #f5b921;
+}
+.ranking-entry {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    color: #f5b921;
+}
+.ranking-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
