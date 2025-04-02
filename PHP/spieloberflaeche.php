@@ -63,7 +63,17 @@ $neuePositionen = [];
 foreach ($spiel->spieler as $spielerObj) {
     $neuePositionen[] = $spielerObj->spielerPosition;
 }
+
 $positionenString = implode(',', $neuePositionen);
+
+// -----------------------
+// Spielfeld-Definition
+// -----------------------
+$boardLength = 21; // Gesamtzahl der Felder
+$columns = 5;      // Anzahl der Spalten
+// Farben für die Spielsteine (nach Index des Spielers)
+$colors = ["red", "blue", "green", "orange", "purple", "cyan", "magenta"];
+
 ?>
 <!DOCTYPE html>
 <html lang="de">
@@ -117,6 +127,7 @@ $positionenString = implode(',', $neuePositionen);
 
     <!-- Formular für den nächsten Zug (nur EIN Würfelknopf) -->
     <form method="get" action="">
+
         <input type="hidden" name="players" value="<?= htmlspecialchars($anzahlSpieler) ?>">
         <input type="hidden" name="names" value="<?= htmlspecialchars(implode(',', $spielernamen)) ?>">
         <input type="hidden" name="round" value="<?= $runde ?>">
