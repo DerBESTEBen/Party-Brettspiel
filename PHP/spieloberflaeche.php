@@ -23,8 +23,7 @@ if ($positionenParameter !== '') {
 
 // -----------------------
 // Größe der Spielfelder festlegen
-// Die Größe (in Pixel) wird anhand der Anzahl der Spieler berechnet.
-// Beispiel: Basiswert 50px, plus 10px pro Spieler.
+// Basiswert 50px, plus 10px pro Spieler
 $zellenGroesse = 50 + ($anzahlSpieler * 10);
 
 // -----------------------
@@ -71,15 +70,7 @@ $positionenString = implode(',', $neuePositionen);
 <head>
     <meta charset="UTF-8">
     <title>Spielbrett</title>
-    <link rel="stylesheet" href="../assets/css/styleOberflaeche.css">
-    <style>
-        /* Dynamisch gesetzte CSS-Variablen */
-        :root {
-            --cell-size: <?= $zellenGroesse ?>px;
-            --columns: <?= $spalten ?>;
-        }
-        /* Falls gewünscht, kannst du hier noch zusätzliches Inline-CSS definieren */
-    </style>
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
     <a href="../index.php" class="btn" id="zurück">Zurück zum Hauptmenü</a>
@@ -96,13 +87,15 @@ $positionenString = implode(',', $neuePositionen);
     <?php endif; ?>
 
     <!-- Anzeige des Spielfelds als Grid -->
-    <div class="board-container">
+    <div class="board-container" style="
+         --cell-size: <?= $zellenGroesse ?>px;
+         --columns: <?= $spalten ?>;
+         width: calc(var(--cell-size) * var(--columns) + (var(--columns) - 1) * 5px);
+         ">
         <?php
         for ($feld = 0; $feld < $spielfeldLaenge; $feld++) {
             echo '<div class="cell">';
-            // Optional: Feldnummer anzeigen
             echo '<span class="cell-number">' . $feld . '</span>';
-            // Zeige in jeder Zelle alle Spielsteine, die an dieser Position stehen
             foreach ($spiel->spieler as $index => $spieler) {
                 if ($spieler->spielerPosition == $feld) {
                     $farbe = $farben[$index % count($farben)];
