@@ -31,7 +31,12 @@ $zellenGroesse = 120; // Zellen sind konstant 120px groß
 $spalten = 5;          // Anzahl der Spalten
 $spielfeldLaenge = 30; // Gesamtzahl der Felder
 // Farbliste für die Spielsteine (nach Index des Spielers)
-$farben = ["red", "blue", "green", "orange", "purple", "cyan", "magenta"];
+$farben = [
+    "red", "blue", "green", "orange", "purple", "cyan", "magenta",
+    "yellow", "pink", "brown", "lime", "turquoise", "violet", "indigo",
+    "gold", "silver", "coral", "teal", "navy", "maroon"
+];
+
 
 // -----------------------
 // Spiel-Objekt erstellen und Zustand setzen
