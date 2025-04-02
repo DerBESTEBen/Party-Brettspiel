@@ -151,7 +151,7 @@ $positionenString = implode(',', $neuePositionen);
         <input type="hidden" name="round" value="<?= $runde ?>">
         <input type="hidden" name="current" value="<?= $aktuellerSpieler ?>">
         <input type="hidden" name="positions" value="<?= htmlspecialchars($positionenString) ?>">
-        <button type="submit" name="roll" value="1">Würfeln (<?= $spielernamen[$aktuellerSpieler] ?>)</button>
+        <button type="submit" name="roll" value="1">Würfeln</button>
     </form>
 </body>
 </html>
