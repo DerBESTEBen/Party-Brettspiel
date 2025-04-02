@@ -203,5 +203,19 @@ $finishString = implode(',', $finishOrders);
         <input type="hidden" name="finish" value="<?= htmlspecialchars($finishString) ?>">
         <button type="submit" name="roll" value="1">Würfeln</button>
     </form>
+    
+    <!-- Aufgabenfeld-Pop-up -->
+    <!-- Pop-up für Aufgabenfeld -->
+    <div id="aufgabenPopup" class="popup" style="display: none;">
+        <div class="popup-content">
+            <h2 id="popup-title">Aufgabe</h2>
+            <p id="aufgabenText"></p>
+            <button class = "aufgabenBtn" id="aufgabeJa">Ja</button>
+            <button class = "aufgabenBtn" id="aufgabeNein">Nein</button>
+        </div>
+    </div>
+
+    <script src="../assets/js/spieloberflaeche.js"></script>
+
 </body>
 </html>
