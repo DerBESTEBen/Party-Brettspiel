@@ -47,11 +47,11 @@ class Spiel {
         else{
             // Würfeln
             $this->wurf = $this->wuerfeln();
-            echo "<p><strong>{$this->spieler[$spielerId]->name}</strong> würfelt: {$this->wurf}</p>";
+            // echo "<p><strong>{$this->spieler[$spielerId]->name}</strong> würfelt: {$this->wurf}</p>";
 
             // Spieler bewegen
             $this->spieler[$spielerId]->position_aktualisieren($this->wurf);
-            echo "<p>Neue Position von <strong>{$this->spieler[$spielerId]->name}</strong>: {$this->spieler[$spielerId]->spielerPosition}</p>";
+            // echo "<p>Neue Position von <strong>{$this->spieler[$spielerId]->name}</strong>: {$this->spieler[$spielerId]->spielerPosition}</p>";
 
             // Feldlogik
             $this->feld_auswerten($spielerId, $this->spieler[$spielerId]->spielerPosition);
@@ -86,7 +86,7 @@ class Spiel {
         $typ = $this->spielfelder->getFeldTyp($spielerposition);
         $feld = $this->spielfelder->getFeldObjekt($spielerposition);
 
-        echo "<p>Feld {$spielerposition} analysiert (Typ: {$typ})</p>";
+        // echo "<p>Feld {$spielerposition} analysiert (Typ: {$typ})</p>";
 
         if ($typ === "sonder" && $feld instanceof Sonderfeld) {
             switch ($feld->aktion) {
@@ -111,13 +111,15 @@ class Spiel {
             $beschreibung = addslashes("Aufgabe für <strong>{$this->spieler[$spielerId]->name}</strong>: {$feld->beschreibung}");
             
             // Optional: zusätzlich in Textform ausgeben
-            echo "<p>{$beschreibung}</p>";
+            // echo "<p>{$beschreibung}</p>";
 
-            // Das ist der entscheidende Teil: JavaScript aufrufen
-            $beschreibungJs = json_encode("Aufgabe für <strong>{$this->spieler[$spielerId]->name}</strong>: {$feld->beschreibung}");
-            echo "<script>window.addEventListener('DOMContentLoaded', function() {
-                setTimeout(function() { zeigeAufgabe({$beschreibungJs}); }, 100);
-            });</script>";
+            $beschreibung = "Aufgabe für <strong>{$this->spieler[$spielerId]->name}</strong>: {$feld->beschreibung}";
+            $beschreibungJs = json_encode($beschreibung);
+            echo "<script>
+                setTimeout(function() {
+                    zeigeAufgabe({$beschreibungJs});
+                }, 100);
+            </script>";
         }
     }
         

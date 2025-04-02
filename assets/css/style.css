@@ -65,14 +65,6 @@ a.btn, button {
     margin: 2px;
 }
 
-/* Zusätzliche Info-Box für den letzten Zug */
-.zug-info {
-    padding: 10px;
-    background-color: #f5b921;
-    border: 1px solid #99f;
-    margin-bottom: 20px;
-    color: #000;
-}
 
 /*Pop Ups der Felder*/
 .popup {

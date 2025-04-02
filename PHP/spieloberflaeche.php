@@ -120,15 +120,14 @@ $finishString = implode(',', $finishOrders);
 <body>
     <a href="../index.php" class="btn" id="zurück">Zurück zum Hauptmenü</a>
     
-    <h1></h1>
     <p>Aktuelle Runde: <?= $runde ?></p>
     <p>Aktueller Zug: <?= $spielernamen[$aktuellerSpieler] ?></p>
     
-    <?php /* if (isset($_GET['roll'])): ?>
+    <?php if (isset($_GET['roll'])): ?>
         <div class="zug-info">
             <?= $aktionsAusgabe ?>
         </div>
-    <?php endif; */ ?>
+    <?php endif; ?>
 
     <div class="board-container">
         <?php
@@ -210,10 +209,11 @@ $finishString = implode(',', $finishOrders);
         <div class="popup-content">
             <h2 id="popup-title">Aufgabe</h2>
             <p id="aufgabenText"></p>
-            <button class = "aufgabenBtn" id="aufgabeJa">Ja</button>
-            <button class = "aufgabenBtn" id="aufgabeNein">Nein</button>
+            <button id="aufgabeJa">Ja</button>
+            <button id="aufgabeNein">Nein</button>
         </div>
     </div>
+
 
     <script src="../assets/js/spieloberflaeche.js"></script>
 
