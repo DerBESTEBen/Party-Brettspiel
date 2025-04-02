@@ -5,56 +5,67 @@ include_once 'spiel.php';   // Spiel-Klasse einbinden
 // -----------------
 // Spielstatus übernehmen
 // -----------------
-$playerCount = isset($_GET['players']) ? intval($_GET['players']) : 2;
-$names = isset($_GET['names']) ? explode(',', $_GET['names']) : [];
-if(empty($names)) {
-    for ($i = 0; $i < $playerCount; $i++) {
-        $names[] = "Spieler " . ($i + 1);
+$anzahlSpieler = isset($_GET['players']) ? intval($_GET['players']) : 2;
+$spielernamen = isset($_GET['names']) ? explode(',', $_GET['names']) : [];
+if (empty($spielernamen)) {
+    for ($i = 0; $i < $anzahlSpieler; $i++) {
+        $spielernamen[] = "Spieler " . ($i + 1);
     }
 }
-$round = isset($_GET['round']) ? intval($_GET['round']) : 1;
-$currentPlayer = isset($_GET['current']) ? intval($_GET['current']) : 0;
-$positionsParam = isset($_GET['positions']) ? $_GET['positions'] : '';
-if ($positionsParam !== '') {
-    $positions = explode(',', $positionsParam);
+$runde = isset($_GET['round']) ? intval($_GET['round']) : 1;
+$aktuellerSpieler = isset($_GET['current']) ? intval($_GET['current']) : 0;
+$positionenParameter = isset($_GET['positions']) ? $_GET['positions'] : '';
+if ($positionenParameter !== '') {
+    $positionen = explode(',', $positionenParameter);
 } else {
-    $positions = array_fill(0, $playerCount, 0);
+    $positionen = array_fill(0, $anzahlSpieler, 0);
 }
 
 // -----------------------
-// Spiel-Objekt erstellen und Zustand setzen
+// Größe der Spielfelder festlegen
+// Die Größe (in Pixel) wird anhand der Anzahl der Spieler berechnet.
+// Beispiel: Basiswert 50px, plus 10px pro Spieler.
+$zellenGroesse = 50 + ($anzahlSpieler * 10);
+
 // -----------------------
-$spiel = new Spiel($names);
+// Spielfeld-Definition
+$spielfeldLaenge = 30; // Gesamtzahl der Felder
+$spalten = 5;          // Anzahl der Spalten
+// Farbliste für die Spielsteine (nach Index des Spielers)
+$farben = ["red", "blue", "green", "orange", "purple", "cyan", "magenta"];
+
+// -----------------------
+// Spiel-Objekt erstellen und Zustand setzen
+$spiel = new Spiel($spielernamen);
 foreach ($spiel->spieler as $i => $spielerObj) {
-    $spiel->spieler[$i]->spielerPosition = isset($positions[$i]) ? intval($positions[$i]) : 0;
+    $spiel->spieler[$i]->spielerPosition = isset($positionen[$i]) ? intval($positionen[$i]) : 0;
 }
 
 // -----------------------
 // Aktionsverarbeitung: Würfelknopf wurde gedrückt
-// -----------------------
-$actionOutput = '';
+$aktionsAusgabe = '';
 if (isset($_GET['roll'])) {
     ob_start();
-    $spiel->zug_starten($currentPlayer);
-    $actionOutput = ob_get_clean();
+    $spiel->zug_starten($aktuellerSpieler);
+    $aktionsAusgabe = ob_get_clean();
 
     // Nach dem Zug des letzten Spielers wird die Runde erhöht
-    if ($currentPlayer >= $playerCount - 1) {
-        $round++;
-        $currentPlayer = 0;
+    if ($aktuellerSpieler >= $anzahlSpieler - 1) {
+        $runde++;
+        $aktuellerSpieler = 0;
     } else {
-        $currentPlayer++;
+        $aktuellerSpieler++;
     }
 }
 
 // -----------------------
 // Aktualisiere die Positionen für das Formular
-// -----------------------
-$newPositions = [];
+$neuePositionen = [];
 foreach ($spiel->spieler as $spielerObj) {
-    $newPositions[] = $spielerObj->spielerPosition;
+    $neuePositionen[] = $spielerObj->spielerPosition;
 }
-$positionsString = implode(',', $newPositions);
+
+$positionenString = implode(',', $neuePositionen);
 
 // -----------------------
 // Spielfeld-Definition
@@ -63,6 +74,7 @@ $boardLength = 21; // Gesamtzahl der Felder
 $columns = 5;      // Anzahl der Spalten
 // Farben für die Spielsteine (nach Index des Spielers)
 $colors = ["red", "blue", "green", "orange", "purple", "cyan", "magenta"];
+
 ?>
 <!DOCTYPE html>
 <html lang="de">
@@ -71,62 +83,40 @@ $colors = ["red", "blue", "green", "orange", "purple", "cyan", "magenta"];
     <title>Spielbrett</title>
     <link rel="stylesheet" href="../assets/css/styleOberflaeche.css">
     <style>
-        /* Spielfeld als Grid */
-        .board-container {
-            display: grid;
-            grid-template-columns: repeat(<?= $columns ?>, 1fr);
-            gap: 5px;
-            margin: 20px 0;
+        /* Dynamisch gesetzte CSS-Variablen */
+        :root {
+            --cell-size: <?= $zellenGroesse ?>px;
+            --columns: <?= $spalten ?>;
         }
-        .cell {
-            position: relative;
-            border: 1px solid #ccc;
-            height: 60px;
-            background-color: #f9f9f9;
-        }
-        .cell-number {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            font-size: 10px;
-            color: #999;
-        }
-        /* Spielstein als farbiger Punkt */
-        .game-piece {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: inline-block;
-            margin: 2px;
-        }
+        /* Falls gewünscht, kannst du hier noch zusätzliches Inline-CSS definieren */
     </style>
 </head>
 <body>
     <a href="../index.php" class="btn" id="zurück">Zurück zum Hauptmenü</a>
     
     <h1>Spielbrett</h1>
-    <p>Aktuelle Runde: <?= $round ?></p>
-    <p>Aktueller Zug: <?= $names[$currentPlayer] ?></p>
+    <p>Aktuelle Runde: <?= $runde ?></p>
+    <p>Aktueller Zug: <?= $spielernamen[$aktuellerSpieler] ?></p>
     
-    <!-- Anzeige des letzten Zuges -->
+    <!-- Ausgabe des letzten Zuges -->
     <?php if (isset($_GET['roll'])): ?>
         <div class="zug-info">
-            <?= $actionOutput ?>
+            <?= $aktionsAusgabe ?>
         </div>
     <?php endif; ?>
 
     <!-- Anzeige des Spielfelds als Grid -->
     <div class="board-container">
         <?php
-        for ($cell = 0; $cell < $boardLength; $cell++) {
+        for ($feld = 0; $feld < $spielfeldLaenge; $feld++) {
             echo '<div class="cell">';
             // Optional: Feldnummer anzeigen
-            echo '<span class="cell-number">' . $cell . '</span>';
+            echo '<span class="cell-number">' . $feld . '</span>';
             // Zeige in jeder Zelle alle Spielsteine, die an dieser Position stehen
             foreach ($spiel->spieler as $index => $spieler) {
-                if ($spieler->spielerPosition == $cell) {
-                    $color = $colors[$index % count($colors)];
-                    echo '<div class="game-piece" style="background-color:' . $color . ';" title="' . $spieler->name . '"></div>';
+                if ($spieler->spielerPosition == $feld) {
+                    $farbe = $farben[$index % count($farben)];
+                    echo '<div class="game-piece" style="background-color:' . $farbe . ';" title="' . $spieler->name . '"></div>';
                 }
             }
             echo '</div>';
@@ -144,13 +134,13 @@ $colors = ["red", "blue", "green", "orange", "purple", "cyan", "magenta"];
 
     <!-- Formular für den nächsten Zug (nur EIN Würfelknopf) -->
     <form method="get" action="">
-        <input type="hidden" name="players" value="<?= htmlspecialchars($playerCount) ?>">
-        <input type="hidden" name="names" value="<?= htmlspecialchars(implode(',', $names)) ?>">
-        <input type="hidden" name="round" value="<?= $round ?>">
-        <input type="hidden" name="current" value="<?= $currentPlayer ?>">
-        <input type="hidden" name="positions" value="<?= htmlspecialchars($positionsString) ?>">
 
-        <button type="submit" class="btn" name="roll" value="1">Würfeln (<?= $names[$currentPlayer] ?>)</button>
+        <input type="hidden" name="players" value="<?= htmlspecialchars($anzahlSpieler) ?>">
+        <input type="hidden" name="names" value="<?= htmlspecialchars(implode(',', $spielernamen)) ?>">
+        <input type="hidden" name="round" value="<?= $runde ?>">
+        <input type="hidden" name="current" value="<?= $aktuellerSpieler ?>">
+        <input type="hidden" name="positions" value="<?= htmlspecialchars($positionenString) ?>">
+        <button type="submit" name="roll" value="1">Würfeln (<?= $spielernamen[$aktuellerSpieler] ?>)</button>
     </form>
 </body>
 </html>
