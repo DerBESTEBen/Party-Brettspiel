@@ -108,28 +108,17 @@ class Spiel {
         }
 
         if ($typ === "aufgabe" && $feld instanceof Aufgabenfeld) {
-            echo "<p>Aufgabe für <strong>{$this->spieler[$spielerId]->name}</strong>: {$feld->beschreibung}</p>";
-        }
+            $beschreibung = addslashes("Aufgabe für <strong>{$this->spieler[$spielerId]->name}</strong>: {$feld->beschreibung}");
+            
+            // Optional: zusätzlich in Textform ausgeben
+            echo "<p>{$beschreibung}</p>";
 
-        if ($typ === "normal") {
-            echo "<p>Normales Feld – nichts passiert.</p>";
+            // Das ist der entscheidende Teil: JavaScript aufrufen
+            $beschreibungJs = json_encode("Aufgabe für <strong>{$this->spieler[$spielerId]->name}</strong>: {$feld->beschreibung}");
+            echo "<script>window.addEventListener('DOMContentLoaded', function() {
+                setTimeout(function() { zeigeAufgabe({$beschreibungJs}); }, 100);
+            });</script>";
         }
-    /**  Beispiel: Spieler muss auf Feld 7 eine Runde aussetzen
-        *if ($spielerposition === 7 || $spielerposition === 10 || $spielerposition === 3 || $spielerposition === 5 || $spielerposition === 9) {
-        *    $this->spieler[$spielerId]->status = false;
-        *    echo "<p><strong>{$this->spieler[$spielerId]->name}</strong> muss eine Runde aussetzen!</p>";
-        *}
-    *if ($feldTyp === "sonderfeld") {
-    *    $sonder = new Sonderfelder($spielerposition, "zurück");
-    *    $sonder->aktion_ausführen($this->spieler[$spielerId]);
-    *}
-
-    *if ($feldTyp === "aufgabe") {
-    *    $aufgabe = new Aufgaben($spielerposition, "Löse die Frage: Was ist 2 + 2?");
-    *    echo "<p>Aufgabe für {$this->spieler[$spielerId]->name}: {$aufgabe->beschreibung}</p>";
-    *    // Aufgabenbearbeitung z. B. über Eingabe/Bestätigung
-    *}
-    */
     }
         
 
