@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spielanleitung</title>
-    <link rel="stylesheet" href="..\assets\css\style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
     <div class="instructions-container">
@@ -21,7 +21,7 @@
             <li>Spielzug wird beendet.</li>
             <li>Nächster Spieler würfelt.</li>
         </ol>
-        <a href="..\index.php" class="btn">Zurück zum Hauptmenü</a>
+        <a href="../index.php" class="btn">Zurück zum Hauptmenü</a>
     </div>
 </body>
 </html>
