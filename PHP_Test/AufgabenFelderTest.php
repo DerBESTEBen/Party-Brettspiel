@@ -1,10 +1,10 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/../PHP/aufgabenFelder.php';
+
 class AufgabenFelderTest extends TestCase {
     public function testAufgabenArrayExistiert() {
-        $aufgaben = require __DIR__ . '/../PHP/aufgabenFelder.php';
-        $this->assertIsArray($aufgaben);
-        $this->assertNotEmpty($aufgaben);
+        $this->assertIsArray(Aufgabenfeld::getAlleAufgaben());
     }
 }

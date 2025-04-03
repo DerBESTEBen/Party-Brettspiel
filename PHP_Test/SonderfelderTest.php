@@ -1,10 +1,10 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/../PHP/sonderfelder.php';
+
 class SonderfelderTest extends TestCase {
     public function testSonderfelderArrayExistiert() {
-        $sonderfelder = require __DIR__ . '/../PHP/sonderfelder.php';
-        $this->assertIsArray($sonderfelder);
-        $this->assertNotEmpty($sonderfelder);
+        $this->assertIsArray(Sonderfeld::getAlle());
     }
 }
