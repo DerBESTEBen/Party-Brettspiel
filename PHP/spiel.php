@@ -57,7 +57,7 @@ class Spiel {
             $this->feld_auswerten($spielerId, $this->spieler[$spielerId]->spielerPosition);
 
             // Siegbedingung
-            if ($this->spieler[$spielerId]->spielerPosition >= 20) {
+            if ($this->spieler[$spielerId]->spielerPosition >= 29) {
                 echo "<p>Spieler <strong>{$this->spieler[$spielerId]->name}</strong> hat gewonnen!</p>";
                 $this->spiel_beenden();
             }
