@@ -1,0 +1,36 @@
+{
+  "name": "partybrettspiel",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jsdom": "^26.0.0"
+  },
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DerBESTEBen/Party-Brettspiel.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DerBESTEBen/Party-Brettspiel/issues"
+  },
+  "homepage": "https://github.com/DerBESTEBen/Party-Brettspiel#readme",
+  "description": "",
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  },
+  "jest": {
+  "collectCoverage": true,
+  "coverageReporters": ["text", "html"],
+  "collectCoverageFrom": [
+    "assets/js/**/*.js"
+  ]
+}
+
+}
