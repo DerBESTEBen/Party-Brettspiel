@@ -26,11 +26,11 @@
     "node-fetch": "^2.7.0"
   },
   "jest": {
-  "collectCoverage": true,
-  "coverageReporters": ["text", "html"],
-  "collectCoverageFrom": [
-    "assets/js/**/*.js"
-  ]
-}
-
+    "testEnvironment": "jsdom",
+    "collectCoverage": true,
+    "coverageReporters": ["text", "html"],
+    "collectCoverageFrom": [
+      "assets/js/**/*.js"
+    ]
+  }
 }

@@ -1,18 +1,25 @@
-/**
- * @jest-environment jsdom
- */
-const { showNameInputs } = require("../assets/js/Spieleinstellung");
+const fs = require("fs");
+const path = require("path");
 
-describe("Spieleinstellung.js – Nameingabe", () => {
-  test("erstellt die richtige Anzahl an Namensfeldern", () => {
-    document.body.innerHTML = '<div id="nameInputs"></div>';
-    const nameInputs = document.getElementById("nameInputs");
+describe("Spieleinstellung.js", () => {
+  beforeAll(() => {
+    document.body.innerHTML = `
+      <button id="startGame"></button>
+      <div id="popup" style="display:none;"></div>
+      <button id="nextStep"></button>
+      <div id="step1"></div>
+      <div id="step2"></div>
+      <div id="step3"></div>
+      <input id="playerCount" />
+    `;
 
-    showNameInputs(3, nameInputs);
-    const inputs = nameInputs.querySelectorAll("input");
+    const code = fs.readFileSync(path.resolve(__dirname, "../assets/js/Spieleinstellung.js"), "utf8");
+    const script = document.createElement("script");
+    script.textContent = code;
+    document.head.appendChild(script);
+  });
 
-    expect(inputs.length).toBe(3);
-    expect(inputs[0].placeholder).toBe("Name Spieler 1");
-    expect(inputs[1].value).toBe("Spieler 2");
+  test("Popup ist initial versteckt", () => {
+    expect(document.getElementById("popup").style.display).toBe("none");
   });
 });

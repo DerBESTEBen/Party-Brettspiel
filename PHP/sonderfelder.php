@@ -35,7 +35,7 @@ class Sonderfelder {
         return [
             new Sonderfeld(3, "aussetzen"),
             new Sonderfeld(10, "zurück"),
-            new Sonderfeld(29, "ziel")
+            new Sonderfeld(20, "ziel")
         ];
     }
 }

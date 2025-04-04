@@ -1,0 +1,44 @@
+# === System-/Editor-Dateien ===
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+*.bak
+
+# === XAMPP spezifisch (falls verwendet) ===
+xampp/
+htdocs/
+
+# === PHP-spezifisch ===
+vendor/          # Composer Abhängigkeiten
+composer.lock
+*.phar
+
+# === PHPUnit ===
+.phpunit.result.cache
+coverage/
+test-output/
+Test_Dateien/
+
+# === IDEs ===
+.vscode/
+.idea/
+
+# === Betriebssysteme ===
+node_modules/
+.env
+.env.local
+.env.*.local
+
+# === Assets-Ordner (optional, wenn generiert) ===
+/assets/js/build/
+/assets/css/build/
+
+# === Backup-Dateien ===
+*~
+
+# === Sonstiges ===
+*.zip
+*.7z
+*.tar.gz
